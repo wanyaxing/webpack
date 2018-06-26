@@ -3,6 +3,7 @@ const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
+const webpack = require('webpack')
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -22,8 +23,33 @@ function resolve (dir) {
 module.exports = {
   context: path.resolve(__dirname, '../'),
   entry: {
-    app: './src/main.js'
+    app: './src/main.js',
+    vendor: ['vue', 'vue-router', 'vuex'],
   },
+  plugins:[
+    new webpack.optimize.CommonsChunkPlugin({
+      name: "vendor",
+      minChunks: ({ resource }) => (
+        resource &&
+        resource.indexOf('node_modules') >= 0 &&
+        resource.match(/\.js$/)
+      ),
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      async: 'common-in-lazy',
+      minChunks: ({ resource } = {}) => (
+        resource &&
+        resource.includes('node_modules') &&
+        /axios/.test(resource)
+      ),
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      async: 'used-twice',
+      minChunks: (module, count) => (
+        count >= 2
+      ),
+    }),
+  ],
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',
