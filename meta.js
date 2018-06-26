@@ -39,18 +39,6 @@ module.exports = {
       required: true,
       message: 'Project name',
     },
-    domain: {
-      when: 'isNotTest',
-      type: 'autocomplete',
-      required: true,
-      message: 'the domain url of dev',
-      source:function(answers, input){
-        return [
-          'http://mobile-'+input+'.haoxitech.com',
-          'https://mobile-'+input+'.haoxitech.com'
-        ];
-      }
-    },
     // description: {
     //   when: 'isNotTest',
     //   type: 'string',

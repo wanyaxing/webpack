@@ -9,7 +9,7 @@
 define('AXAPI_ROOT_PATH', __dir__ );
 define('AXAPI_ELO_PATH' , __dir__ );
 
-if (!isset($_SERVER['HTTP_HOST']) || $_SERVER['HTTP_HOST'] == '{{domain}}')
+if (!isset($_SERVER['HTTP_HOST']) || $_SERVER['HTTP_HOST'] == 'http://mobile-{{domain}}.haoxitech.com')
 {//1是开发模式  2是正式环境
     define('AXAPI_DEPLOY_STATUS', 1 );
 }
