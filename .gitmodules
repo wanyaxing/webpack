@@ -1,3 +1,0 @@
-[submodule "template/php/lib/W2SDK"]
-	path = template/php/lib/W2SDK
-	url = git://github.com/wanyaxing/W2SDK.git
