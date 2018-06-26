@@ -9,7 +9,7 @@
 define('AXAPI_ROOT_PATH', __dir__ );
 define('AXAPI_ELO_PATH' , __dir__ );
 
-if (!isset($_SERVER['HTTP_HOST']) || $_SERVER['HTTP_HOST'] == '{{domainDev}}')
+if (!isset($_SERVER['HTTP_HOST']) || $_SERVER['HTTP_HOST'] == '{{domain}}')
 {//1是开发模式  2是正式环境
     define('AXAPI_DEPLOY_STATUS', 1 );
 }
@@ -23,7 +23,6 @@ require_once(AXAPI_ROOT_PATH.'/components/autoload.php');
 
 /** API项目名（最好全网唯一）   */
 define('AXAPI_PROJECT_NAME', '{{name}}' );
-define('AXAPI_PROJECT_TITLE', '{{name}}' );
 
 // 默认分页数据量
 define('DEFAULT_PAGE_SIZE', 10);

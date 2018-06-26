@@ -287,18 +287,6 @@ class Utility
 		return $s;
     }
 
-
-    /** 获得面包屑导航的代码 */
-    public static function strOfBreadCrumb($breadCrumb)
-    {
-    	$s = '<ol class="breadcrumb">'."\n"
-			.'  <li><a href="/">'.AXAPI_PROJECT_TITLE.'</a></li>'."\n"
-			.'  <li>'.$breadCrumb['parent'].'</li>'."\n"
-			.'  <li class="active"><a href="'.$breadCrumb['url'].'">'.$breadCrumb['name'].'</a></li>'."\n"
-			.'</ol>'."\n";
-		return $s;
-    }
-
     /** 返回当前文件相对根目录的路径 */
     public static function getCurrentFileUrl()
     {

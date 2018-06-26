@@ -14,6 +14,6 @@
         }
         else
         {
-            header('location:/?dd_nav_bgcolor=FF08B2F2',302);
+            header('location:/',302);
         }
     }

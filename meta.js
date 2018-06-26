@@ -39,12 +39,17 @@ module.exports = {
       required: true,
       message: 'Project name',
     },
-    domainDev: {
+    domain: {
       when: 'isNotTest',
-      type: 'string',
+      type: 'autocomplete',
       required: true,
       message: 'the domain url of dev',
-      default: 'http://mobile-template.wanyaxing.com',
+      source:function(answers, input){
+        return [
+          'http://mobile-'+input+'.haoxitech.com',
+          'https://mobile-'+input+'.haoxitech.com'
+        ];
+      }
     },
     // description: {
     //   when: 'isNotTest',
