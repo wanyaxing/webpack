@@ -122,7 +122,7 @@ export default {
 }
 
 .wode_header{
-    background:url(~@/assets/design/wode/wode/back.png) no-repeat;
+    background:url(~@/assets/images/wode/back.png) no-repeat;
     padding-bottom: 42px;
     margin-top: -1px;
 }

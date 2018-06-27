@@ -62,7 +62,7 @@ export default {
     left: 0;
     padding-left: 49px;
     padding-right: 33px;
-    background: url("~@/assets/design/denglu/return.png") no-repeat left;
+    background: url("~@/assets/images/return.png") no-repeat left;
     background-size: auto 52px;
     cursor: pointer;
     font-size: 27px;

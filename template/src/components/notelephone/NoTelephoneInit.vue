@@ -1,16 +1,7 @@
 <template>
     <div class="no_telephone_available_bg" v-if="$store.state.user.currentUser">
         <mt-loadmore :top-method="loadTop" ref="loadmore">
-            <AdminFirstInit v-if="$store.state.user.currentUser.find('extraInfo>isDdAdmin') || $store.state.user.currentUser.find('extraInfo>isWxworkAdmin')" class="form_body"></AdminFirstInit>
-            <template v-else-if="$store.state.page.isWechat || $store.state.page.isH5Mode">
-                <!-- <KongContent v-if="action==''">
-                    <img src="~@/assets/design/kong/quanxian.png" slot="img"/>
-                    <p>在使用记应收之前，</p>
-                    <p>为了更好的为您服务，</p>
-                    <p>您可以与APP版的账号进行绑定，</p>
-                    <p>或者注册一个新账号哦。</p>
-                    <span @click="action='BindLoginInit'">登录</span>
-                </KongContent> -->
+            <template v-if="$store.state.page.isWechat || $store.state.page.isH5Mode">
                 <BindLoginInit v-if="action=='' || action=='BindLoginInit'" :action.sync="action"></BindLoginInit>
                 <ResetPwdInit v-else-if="action=='ResetPwdInit'" :action.sync="action"></ResetPwdInit>
                 <RegisterInit v-else-if="action=='RegisterInit'" :action.sync="action"></RegisterInit>
@@ -30,8 +21,6 @@
 
 <script>
 import KongContent from "@/components/KongContent"
-import InputDaySelect     from "@/components/InputDaySelect"
-import AdminFirstInit     from "./AdminFirstInit.vue"
 import BindLoginInit     from "./BindLoginInit.vue"
 import RegisterInit     from "./RegisterInit.vue"
 import ResetPwdInit     from "./ResetPwdInit.vue"
@@ -40,8 +29,6 @@ export default {
     name: 'NoTelephoneAvailable',
     components:{
         KongContent,
-        InputDaySelect,
-        AdminFirstInit,
         BindLoginInit,
         RegisterInit,
         ResetPwdInit,

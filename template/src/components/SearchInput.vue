@@ -10,11 +10,11 @@
         <input class="input_keyword" type="text" v-model="keyword"
         v-on:input="inputValue = $event.target.value;"  @focus="isSearchFoucs=1" @blur="isSearchFoucs=0" ref="inputKeyword"/>
         <span class="tips_search">
-            <img src="~@/assets/design/ys/hetong/seeks.png" />
+            <img src="~@/assets/images/seeks.png" />
             <span>搜索</span>
         </span>
         <div @click="clear" class="icon_clear">
-            <img src="~@/assets/design/yf/jifapiao/close.png"/>
+            <img src="~@/assets/images/close.png"/>
         </div>
         <span @click="clear" class="btn_cancel">取消</span>
     </span>

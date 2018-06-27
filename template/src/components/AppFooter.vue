@@ -33,23 +33,23 @@ export default {
                     'rank'        :1,
                     'title'       :'首页',
                     'path'        :'/hello',
-                    'iconDefault' :require('@/assets/design/tab/homepage.png'),
-                    'iconActive'  :require('@/assets/design/tab/homepage-fill.png'),
+                    'iconDefault' :require('@/assets/images/tab/homepage.png'),
+                    'iconActive'  :require('@/assets/images/tab/homepage-fill.png'),
                 });
             items.push({
                     'rank'        :2,
                     'title'       :'列表',
                     'path'        :'/list',
-                    'iconDefault' :require('@/assets/design/tab/jys.png'),
-                    'iconActive'  :require('@/assets/design/tab/jysc.png'),
+                    'iconDefault' :require('@/assets/images/tab/jys.png'),
+                    'iconActive'  :require('@/assets/images/tab/jysc.png'),
                 });
 
             items.push({
                     'rank'        :3,
                     'title'       :'我的',
                     'path'        :'/wode',
-                    'iconDefault' :require('@/assets/design/tab/jys.png'),
-                    'iconActive'  :require('@/assets/design/tab/jysc.png'),
+                    'iconDefault' :require('@/assets/images/tab/jys.png'),
+                    'iconActive'  :require('@/assets/images/tab/jysc.png'),
                 });
 
             return items;
