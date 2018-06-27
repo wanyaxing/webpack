@@ -1,0 +1,104 @@
+<template>
+    <div class="InitListBg" v-if="requestResult">
+        <mt-loadmore :top-method="loadTop"  :bottom-method="loadBottom" :bottom-all-loaded="moreParams.allLoaded" :bottomDistance="100" :autoFill="false" ref="loadmore">
+            <div v-if="requestResult.find('results>').length>0" class="tbody_div">
+                <div v-for="detailResult in requestResult.find('results>')"
+                     :detailResult="detailResult"
+                     :key="detailResult.find('uuid')"
+                ></div>
+            </div>
+            <KongContent v-else-if="requestResult">
+                <p>还没有数据哦，加油！</p>
+            </KongContent>
+            <LoadMoreAllLoaded :all-loaded="moreParams.allLoaded" @click.native="loadBottom"></LoadMoreAllLoaded>
+        </mt-loadmore>
+    </div>
+        <KongContent v-else>
+            <img src="~@/assets/images/loading.png" slot="img"/>
+            努力加载中...
+        </KongContent>
+</template>
+
+<script>
+import KongContent from "@/components/KongContent"
+
+export default {
+    name: 'InitList',
+    components:{
+        KongContent,
+    },
+    data(){
+        console.log('InitList.vue.data()');
+        return {
+            params        : null,
+            requestResult : null,
+            moreParams : {
+                allLoaded:false,
+                page:1,
+            },
+        }
+    },
+    computed:{
+        paramsToString(){
+            console.log('InitList.paramsToString()');
+            return JSON.stringify(this.params);
+        },
+    },
+    methods:{
+        pageenter:function(){
+            this.params = Object.assign({},this.params,
+                        {
+                            'auth_code' : this.$store.state.user.currentUser.find('authCode') ,
+                            'status' : '1' ,
+                            'is_more_detail' : 1 ,
+                        },this.$route.query);
+        },
+        loadContent:function(){
+            let params = Object.assign({},this.params,this.moreParams);
+            this.$haoconnect.get('example/list',params).then(hResult=>{
+                if ( hResult.results.length ==0 || (params['size'] && hResult.results.length< params['size']) || (!params['size'] && hResult.results.length< 10) )
+                {
+                    this.moreParams.allLoaded = true;
+                }
+                if (this.$refs.loadmore)
+                {
+                    if (params.page==1)
+                    {
+                        this.$refs.loadmore.onTopLoaded();
+                    }
+                    else
+                    {
+                        hResult.results = this.requestResult.results.concat(hResult.results);
+                        this.$refs.loadmore.onBottomLoaded();
+                    }
+                }
+                this.requestResult = hResult;
+            }).catch(hResult=>{console.error(hResult);this.$MessageBox.alert(hResult.errorStr?hResult.errorStr:hResult)});
+        },
+        loadTop:function(){
+            this.moreParams.page = 1;
+            this.loadContent();
+            console.log('loadTop');
+        },
+        loadBottom:function(){
+            if (!this.moreParams.allLoaded)
+            {
+                this.moreParams.page += 1;
+                this.loadContent();
+                console.log('loadBottom');
+            }
+        },
+    },
+    watch:{
+        paramsToString:function(){
+            console.log('watch',this.params);
+            this.loadContent();
+        },
+    },
+}
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+
+</style>

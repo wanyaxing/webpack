@@ -1,0 +1,214 @@
+/*--------------------vue-checkbox-radio ------------------------*/
+
+.checkbox-component>input:focus+label>.input-box,
+.radio-component>input:focus+label>.input-box
+{
+    box-shadow: none!important;
+}
+.checkbox-component > input + label > .input-box > .input-box-tick,
+.radio-component > input + label > .input-box > .input-box-circle {
+  display: none!important;
+}
+.checkbox-component > input + label > .input-box{
+    background: url(~@/assets/images/duo_no.png) no-repeat center center!important;
+    background-size: 44px 44px!important;
+    border: none!important;
+}
+.radio-component > input + label > .input-box {
+    background: url(~@/assets/images/confirm_hui.png) no-repeat center center!important;
+    background-size: 44px 44px!important;
+    border: none!important;
+}
+.checkbox-component > input:checked + label > .input-box{
+    background: url(~@/assets/images/duo.png) no-repeat center center!important;
+    background-size: 44px 44px!important;
+    border: none!important;
+}
+.radio-component > input:checked + label > .input-box {
+    background: url(~@/assets/images/confirm.png) no-repeat center center!important;
+    background-size: 44px 44px!important;
+    border: none!important;
+}
+.radio-component,.checkbox-component {
+    display: inline-block;
+}
+
+/*-----------------------------cell_inline------------------------------*/
+.cell_inline{
+    background: white;
+    line-height: 84px;
+    min-height: 84px;
+    font-size: 30px;
+    color: #448ef3;
+    text-align: right;
+    position: relative;
+    border-bottom: 2px solid #f0f2f5;
+    clear: both;
+}
+
+.cell_inline .cell_label{
+    position: absolute;
+    pointer-events:none;
+    left: 0px;
+    color: #1b1b20;
+    padding: 0 34px;
+}
+.cell_inline input{
+    width: 100%;
+    font-size: 28px;
+    color: #448ef3;
+    padding-right: 20px;
+    border: 0;
+    text-align: right;
+}
+
+.cell_inline select{
+    font-size: 28px;
+    direction: rtl;
+    width: 50%;
+}
+.cell_inline input.input_day_select{
+    width: 50%;
+}
+.cell_inline input.input_day_two{
+    width: 196px;
+}
+.cell_inline .tip_in_day{
+    color: #1b1b20;
+}
+.cell_inline input:focus{
+    outline: none;
+}
+.cell_inline .form_require_tip{
+    color: #f40b0b;
+    position: relative;
+    top: -4px;
+}
+
+.cell_inline input[type=radio]{
+    width: 30px;
+    transform: scale(2);
+}
+
+.btn_xiayi{
+    background: url(~@/assets/images/get.png) no-repeat;
+    background-size: 13px 23px;
+    background-position: 10px;
+    padding: 0 22px;
+    display: inline-block;
+}
+
+
+.cell_iconline{
+    text-align: left;
+    padding:20px 0;
+}
+
+.cell_iconline input{
+    padding-left: 100px;
+    text-align: left;
+}
+
+.cell_coltwo input{
+    width: 52%;
+}
+
+.cell_coltwo a,.cell_coltwo img{
+    position: absolute;
+    width: 44%;
+    max-height: 70%;
+    line-height: 73px;
+    text-align: center;
+    display: block;
+    right: 6%;
+    top: 15%;
+    font-size: 28px;
+    color: white;
+    background-color: #08b2f2;
+}
+/*----------------------------------------*/
+/*---------------------------------------*/
+.cell_iconline .icon_tel,.cell_iconline .icon_captcha,.cell_iconline .icon_verify,.cell_iconline .icon_pwd,.cell_iconline .icon_name,.cell_iconline .icon_time{
+    background-repeat: no-repeat;
+    width: 31px;
+    height: 31px;
+    margin-left: 33px;
+    top:43px;
+    background-size: auto 31px;
+    position: absolute;
+
+}
+.cell_iconline .icon_tel{
+    background-image:url(~@/assets/images/login_reg/cellphone.png);
+}
+.cell_iconline .icon_captcha{
+    background-image:url(~@/assets/images/login_reg/eye.png);
+}
+.cell_iconline .icon_verify{
+    background-image:url(~@/assets/images/login_reg/verification.png);
+}
+.cell_iconline .icon_pwd{
+    background-image:url(~@/assets/images/login_reg/password.png);
+}
+.cell_iconline .icon_name{
+    background-image:url(~@/assets/images/login_reg/company.png);
+}
+.cell_iconline .icon_time{
+    background-image:url(~@/assets/images/login_reg/establishment.png);
+}
+
+
+.btn_pwd_show,.btn_pwd_hide{
+    display: block;
+    position: absolute;
+    width: 130px;
+    height: 100%;
+    top: 0;
+    right: 0;
+    background:url(~@/assets/images/login_reg/eyes.png) no-repeat;
+    background-size: 38px auto;
+    background-position: 33px 43px;
+}
+.btn_pwd_show{
+    background-image:url(~@/assets/images/login_reg/eyes.png);
+    background-position: 33px 43px;
+}
+
+.btn_pwd_hide{
+    background-image:url(~@/assets/images/login_reg/eyes-close.png);
+    background-position: 33px 51px;
+}
+
+/*---------------------------------------*/
+
+/*----------------------------------------*/
+.btn_red{
+    display: block;
+    background: white;
+    color: #f04040;
+    border: 1px solid #f04040;
+    width: 600px;
+    height: 82px;
+    text-align: center;
+    font-size:36px;;
+    line-height: 82px;
+    letter-spacing: 23px;
+    margin:20px auto 0;
+}
+
+.btn_blue{
+    display: block;
+    background: #08b2f2;
+    color: white;
+    width: 600px;
+    height: 82px;
+    text-align: center;
+    font-size:36px;;
+    line-height: 82px;
+    letter-spacing: 23px;
+    margin:20px auto 0;
+}
+
+.btn_disabled{
+    pointer-events:none!important;
+}

@@ -1,0 +1,108 @@
+<template>
+    <div class="InitDetailBg" v-if="item">
+        <div v-if="requestResult.find('results>').length>0" class="tbody_div">
+            <mt-loadmore :top-method="loadTop"  :bottom-method="loadBottom" :bottom-all-loaded="moreParams.allLoaded" :bottomDistance="100" :autoFill="false" ref="loadmore">
+            <div v-for="detailResult in requestResult.find('results>')"
+                 :key="detailResult.find('id')"
+                 class="item_li"
+            >
+                {{detailResult.find('id')}}
+            </div>
+            <LoadMoreAllLoaded :all-loaded="moreParams.allLoaded" @click.native="loadBottom"></LoadMoreAllLoaded>
+            </mt-loadmore>
+        </div>
+        <KongContent v-else>
+            <p>当前没有数据</p>
+        </KongContent>
+    </div>
+    <KongContent v-else>
+        <p>没有数据哦</p>
+    </KongContent>
+</template>
+
+<script>
+import KongContent from "@/components/KongContent"
+
+export default {
+    name: 'InitDetail',
+    components:{
+        KongContent,
+    },
+    data(){
+        console.log('InitDetail.vue.data()');
+        return {
+            params        : {},
+            requestResult : null,
+            moreParams : {
+                allLoaded:false,
+                page:1,
+            },
+        }
+    },
+    computed:{
+        paramsToString(){
+            console.log('InitDetail.paramsToString()');
+            return JSON.stringify(this.params);
+        },
+    },
+    methods:{
+        pageenter:function(){
+            this.params = {
+                        'company_id' : this.$store.state.user.currentUser.find('companyID') ,
+                        'year'       : this.$route.query.year?this.$route.query.year   : (new Date).getFullYear()   ,
+                        'month'      : this.$route.query.month?this.$route.query.month : (new Date).getMonth()+1    ,
+                    };
+            this.$store.dispatch('pageUpdate',{
+                    title:'标题'
+                });
+        },
+        loadContent:function(){
+            let params = Object.assign({},this.params,this.moreParams);
+            this.$haoconnect.get('example/list',params).then(hResult=>{
+                if ( hResult.results.length ==0 || (params['size'] && hResult.results.length< params['size']) || (!params['size'] && hResult.results.length< 10) )
+                {
+                    this.moreParams.allLoaded = true;
+                }
+                if (this.$refs.loadmore)
+                {
+                    if (params.page==1)
+                    {
+                        this.$refs.loadmore.onTopLoaded();
+                    }
+                    else
+                    {
+                        hResult.results = this.requestResult.results.concat(hResult.results);
+                        this.$refs.loadmore.onBottomLoaded();
+                    }
+                }
+                this.requestResult = hResult;
+                this.isEditMode = false;
+                this.rightBtnCheck();
+            }).catch(hResult=>{console.error(hResult);this.$MessageBox.alert(hResult.errorStr?hResult.errorStr:hResult)});
+        },
+        loadTop:function(){
+            this.moreParams.page = 1;
+            this.loadContent();
+            console.log('loadTop');
+        },
+        loadBottom:function(){
+            if (!this.moreParams.allLoaded)
+            {
+                this.moreParams.page += 1;
+                this.loadContent();
+                console.log('loadBottom');
+            }
+        },
+    },
+    watch:{
+        paramsToString:function(){
+            this.loadContent();
+        },
+    },
+}
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+
+</style>
