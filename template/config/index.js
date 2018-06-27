@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
         '/static/ajax/': {
-            target: '{{domainDev}}',
+            target: '{{http://mobile-{{name}}.haoxitech.com}}',
             changeOrigin: true,
             pathRewrite: {
               '^/static/ajax/': '/static/ajax/'
