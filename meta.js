@@ -36,8 +36,16 @@ module.exports = {
     name: {
       when: 'isNotTest',
       type: 'string',
+      default: 'example',
       required: true,
       message: 'Project name',
+    },
+    port: {
+      when: 'isNotTest',
+      type: 'Number',
+      default: 8080,
+      required: true,
+      message: 'dev port',
     },
     // description: {
     //   when: 'isNotTest',
