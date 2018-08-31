@@ -1,6 +1,6 @@
 <template>
     <span class="input_hao_select" @click="actionSelect" ref="inputSelectNode">
-        <span class="ios_select_value">{{text}}</span>
+        <span class="ios_select_value">\{{text}}</span>
     </span>
 </template>
 

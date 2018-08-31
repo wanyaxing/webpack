@@ -3,7 +3,7 @@
         <span style="display:none;">
             <slot></slot>
         </span>
-        <span class="ios_select_value">{{text}}</span>
+        <span class="ios_select_value">\{{text}}</span>
     </span>
 </template>
 

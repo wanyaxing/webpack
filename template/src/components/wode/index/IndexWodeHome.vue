@@ -8,14 +8,14 @@
                 <div class="avatar" v-if="requestResult.find('avatar')"><img
                     :src="'/ajax/file_relationships_view.php?file_name='+encodeURIComponent(requestResult.find('avatar')+'?imageMogr2/auto-orient/thumbnail/!120x120r/gravity/Center/crop/120x120')"
                     /></div>
-                <div class="avatar" v-else>{{requestResult.find('nickname','未知昵称').substr(-2)}}</div>
+                <div class="avatar" v-else>\{{requestResult.find('nickname','未知昵称').substr(-2)}}</div>
                 <div class="name">
-                    <span class="tag" v-if="requestResult.find('id') == requestResult.find('extraInfo>company>userID')">{{requestResult.find('id') == requestResult.find('extraInfo>company>userID') ?'管理员':''}}</span>
-                    <span class="tag" v-if="requestResult.find('userRoleLocal')">{{requestResult.find('userRoleLocal')}}</span>
-                    <span>{{requestResult.find('nickname','未知昵称')}}</span>
+                    <span class="tag" v-if="requestResult.find('id') == requestResult.find('extraInfo>company>userID')">\{{requestResult.find('id') == requestResult.find('extraInfo>company>userID') ?'管理员':''}}</span>
+                    <span class="tag" v-if="requestResult.find('userRoleLocal')">\{{requestResult.find('userRoleLocal')}}</span>
+                    <span>\{{requestResult.find('nickname','未知昵称')}}</span>
                 </div>
-                <div class="company">{{requestResult.find('extraInfo>company>name')}}</div>
-                <div class="telephone">{{requestResult.find('telephone')}}</div>
+                <div class="company">\{{requestResult.find('extraInfo>company>name')}}</div>
+                <div class="telephone">\{{requestResult.find('telephone')}}</div>
             </div>
         </div>
         <div class="cell_inline" style="margin-top:10px;" @click="logout">

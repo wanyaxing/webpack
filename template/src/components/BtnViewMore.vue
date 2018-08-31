@@ -1,6 +1,6 @@
 <template>
     <div class="btn_view_more_bg">
-        <div class="btn_viewmore" @click="switchMore">{{placeholderText}}</div>
+        <div class="btn_viewmore" @click="switchMore">\{{placeholderText}}</div>
         <div class="bg_more" v-show="isShowMore" ref="bgMore">
             <slot></slot>
         </div>

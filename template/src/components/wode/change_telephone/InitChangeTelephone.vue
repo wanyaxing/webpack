@@ -13,7 +13,7 @@
         <div class="cell_inline cell_iconline cell_coltwo">
             <div class="cell_label icon_verify"></div>
             <input type="tel" v-model="item.verify_code"  placeholder="请输入验证码" />
-            <a @click="sendSmsVerifyCode">发送验证码<span v-if="countDown>0">({{countDown}})</span></a>
+            <a @click="sendSmsVerifyCode">发送验证码<span v-if="countDown>0">(\{{countDown}})</span></a>
         </div>
         <div class="cell_inline cell_iconline">
             <div class="cell_label icon_pwd"></div>

@@ -6,7 +6,7 @@
                  :key="detailResult.find('id')"
                  class="item_li"
             >
-                {{detailResult.find('id')}}
+                \{{detailResult.find('id')}}
             </div>
             <LoadMoreAllLoaded :all-loaded="moreParams.allLoaded" @click.native="loadBottom"></LoadMoreAllLoaded>
             </mt-loadmore>

@@ -1,6 +1,6 @@
 <template>
     <span class="input_day_select" @click="dateSelect">
-        {{value?value:placeholderText}}
+        \{{value?value:placeholderText}}
     </span>
 </template>
 

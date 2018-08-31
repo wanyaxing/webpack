@@ -16,7 +16,7 @@
         </div>
         <div v-if="isUploading" class="bg_uploading">
             <div class="info_uploading">
-                上传中{{progress}}%...
+                上传中\{{progress}}%...
             </div>
         </div>
     </form>

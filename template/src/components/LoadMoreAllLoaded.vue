@@ -1,6 +1,6 @@
 <template>
     <div class="load_more_all_loaded_bg">
-        {{allLoaded?'--- 我是有底线的 ---':'--- 上拉加载更多 ---'}}
+        \{{allLoaded?'--- 我是有底线的 ---':'--- 上拉加载更多 ---'}}
     </div>
 </template>
 

@@ -1,8 +1,8 @@
 <template>
     <div class="app-header" v-if="isHeaderShow" :class="{wechat_header:$store.state.page.isWechat,wxwork_header:$store.state.page.isWxwork,}">
-        <div class="btn_back" @click="$store.dispatch('btnBack')" v-if="!$route.meta.isShowFooter">{{ $store.state.page.backText?$store.state.page.backText:'返回' }}</div>
-        <div class="header_title" >{{ $store.state.page.title }}</div>
-        <div class="btn_more" @click="$store.dispatch('btnMore')">{{$store.state.page.moreText}}</div>
+        <div class="btn_back" @click="$store.dispatch('btnBack')" v-if="!$route.meta.isShowFooter">\{{ $store.state.page.backText?$store.state.page.backText:'返回' }}</div>
+        <div class="header_title" >\{{ $store.state.page.title }}</div>
+        <div class="btn_more" @click="$store.dispatch('btnMore')">\{{$store.state.page.moreText}}</div>
     </div>
     <div v-else></div>
 </template>

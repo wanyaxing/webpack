@@ -7,7 +7,7 @@
                 <RegisterInit v-else-if="action=='RegisterInit'" :action.sync="action"></RegisterInit>
             </template>
             <KongContent v-else>
-                <p>{{$store.state.user.currentUser.find('username','嗨')}}，</p>
+                <p>\{{$store.state.user.currentUser.find('username','嗨')}}，</p>
                 <p>您还不能使用记应收，</p>
                 <p>快通知管理员来开通吧~~</p>
             </KongContent>

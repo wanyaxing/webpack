@@ -6,7 +6,7 @@
                     <router-link :to="item['path']" >
                         <img class="default" v-bind:src="item['iconDefault']"/>
                         <img class="active" v-bind:src="item['iconActive']"/>
-                        <div>{{item.title}}</div>
+                        <div>\{{item.title}}</div>
                     </router-link>
                 </div>
             </div>
