@@ -62,21 +62,6 @@ export default {
         NoTelephoneInit,
     },
     methods:{
-        checkIfCanBeSync:function(){
-            if (this.currentUser && this.currentUser.find('companyID')>0)
-            {
-                this.$haoconnect.post('company/is_can_be_sync').then(hResult=>{
-
-                }).catch(hResult=>{
-                    this.isCanBeSync = false;
-                    this.$MessageBox.alert(hResult.errorStr?hResult.errorStr:hResult).then(()=>{
-                        // this.checkIfCanBeSync();
-                    })
-                    // alert(hResult.errorStr?hResult.errorStr:hResult);
-                    // this.checkIfCanBeSync();
-                });
-            }
-        }
     },
     watch:{
         '$route'(to, from) {
@@ -97,10 +82,6 @@ export default {
 
             //一旦路由发生变化，就无脑关闭messageBox
             this.$MessageBox.close();
-            if (!this.isCanBeSync)
-            {
-                this.checkIfCanBeSync();
-            }
         }
     },
     beforeCreate:function(){
