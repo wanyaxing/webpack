@@ -87,7 +87,6 @@ export default {
     beforeCreate:function(){
         console.log('App.vue.beforeCreate',arguments);
         this.$store.dispatch('get_my_detail').then(hResult=>{
-            this.checkIfCanBeSync();
         });
     },
     created:function(){
