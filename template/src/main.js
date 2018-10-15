@@ -4,7 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
-import hao_connect from './lib/HaoConnect/vueinstall.js'
+import hao_connect from './lib/HaoConnect/index.js'
 Vue.use(hao_connect)
 
 import vModelPlus from './lib/v-model-plus/index.js'
@@ -42,11 +42,18 @@ import W2Time from './lib/W2SDK/W2Time.js'
 Vue.use(W2Time)
 
 
-import touch from 'vue-directive-touch';
-Vue.use(touch);
+import 'viewerjs/dist/viewer.css'
+import Viewer from 'v-viewer'
+Vue.use(Viewer,{
+  defaultOptions: {
+    // 'button': false,
+    'title': false,
+    // 'navbar': false,
+    'toolbar': false,
+  }
+})
 
-import VueImg from 'v-img';
-Vue.use(VueImg);
+
 
 import '@/lib/utility/index.css'
 import utility from './lib/utility/index.js';

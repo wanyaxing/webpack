@@ -86,9 +86,9 @@ export default {
                     arr.unshift(selectOption);
                 }
                 this.options = arr;
+                this.loading = false;
             }).catch(hResult=>{
                 this.options = [];
-            }).finally(hResult=>{
                 this.loading = false;
             });
         },

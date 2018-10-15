@@ -37,7 +37,9 @@
     "mint-ui": "^2.2.9",
     "nprogress": "^0.2.0",
     "sortablejs": "^1.6.1",
-    "v-img": "^0.1.9",
+    "v-viewer": "^1.2.1",
+    "vue-cropper": "^0.3.8",
+    "viewerjs": "^1.2.0",
     "vue": "^2.5.16"
   },
   "devDependencies": {

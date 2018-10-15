@@ -23,6 +23,7 @@ require_once(AXAPI_ROOT_PATH.'/components/autoload.php');
 
 /** API项目名（最好全网唯一）   */
 define('AXAPI_PROJECT_NAME', '{{name}}' );
+define('AXAPI_PROJECT_TITLE', '{{name}}' );
 
 // 默认分页数据量
 define('DEFAULT_PAGE_SIZE', 10);

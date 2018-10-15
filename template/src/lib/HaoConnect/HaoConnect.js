@@ -5,300 +5,24 @@ import 'nprogress/nprogress.css'
 const browserMD5File = require('browser-md5-file');
 const SparkMD5 = require('spark-md5');
 
-
-const HaoResult = (function()
-{
-    /** 将数据初始化成对象 */
-    function HaoResult(results,errorCode,errorStr,extraInfo)
-    {
-        var modelType = 'HaoResult';
-        if (!errorCode && !errorStr && !extraInfo && typeof(results['errorCode'])!='undefined')
-        {
-            errorCode = results['errorCode'];
-            errorStr  = results['errorStr'];
-            extraInfo = results['extraInfo'];
-            modelType = results['modelType'];
-            results   = results['results'];
-        }
-                this.errorCode   = errorCode;
-                this.errorStr    = errorStr;
-                this.extraInfo   = extraInfo;
-                this.results     = results;
-                this.modelType   = modelType;
-
-                this.pathCache   = {};
-                this.searchIndexString   = null;
-    }
-
-    /** 根据路径取数据，默认是results中取，也可以指定extraInfo>路径下取数据。 */
-    HaoResult.prototype.findValue = function(path,defaultValue)
-    {
-        // console.log('debug find:',path,this);
-        path = path.trim();
-        if (this.pathCache[path])
-        {
-            return this.pathCache[path];
-        }
-        if (!path)
-        {
-            console.log('warning: unvalid path.');
-            return null;
-        }
-
-        if ( path.indexOf('results>') !== 0 && path.indexOf('extraInfo>') !== 0 )
-        {
-                path = 'results>' + path;
-        }
-
-        let paths = path.split('>');
-
-        var changeValue = null;
-
-        for (var index in paths)
-        {
-            var keyItem = paths[index];
-            if (index==0)
-            {
-                if (keyItem=='extraInfo')
-                {
-                    changeValue = this.extraInfo;
-                }
-                else
-                {
-                    changeValue = this.results;
-                }
-            }
-            else if (keyItem!='')
-            {
-                if (changeValue && typeof changeValue[keyItem]!='undefined')
-                {
-                    changeValue = changeValue[keyItem];
-                    continue;
-                }
-                changeValue = null;
-                break;
-            }
-        }
-
-        this.pathCache[path] = changeValue;
-
-        if (defaultValue && (changeValue==null || changeValue=='') )
-        {
-            changeValue = defaultValue;
-        }
-        return changeValue;
-
-    }
-    HaoResult.prototype.findAsFloat = function(path,defaultValue)
-    {
-        return parseFloat(this.findValue(path,defaultValue));
-    }
-
-    /** 根据路径取数据，默认是results中取，也可以指定extraInfo>路径下取数据。 */
-    HaoResult.prototype.find = function(path,defaultValue)
-    {
-        let value = this.findValue(path,defaultValue);
-        value = this.value(value);
-        return value;
-    }
-
-    /** 传入值如果是model，则以当前Result为框架构建新Result，否则直接返回。 */
-    HaoResult.prototype.value = function(value)
-    {
-        if (Array.isArray(value))
-        {
-            var array = [];
-            for (var key in value)
-            {
-                var tmpValue = value[key];
-                array.push(this.value(tmpValue));
-            }
-            return array;
-        }
-        else if (typeof(value) == 'object')
-        {
-            if (value!=null && value.modelType)
-            {
-                return new HaoResult(value, this.errorCode, this.errorStr, this.extraInfo);
-            }
-            else
-            {
-                return value;
-            }
-        }
-        return value;
-    }
-
-    HaoResult.prototype.getKeyIndexArray = function(target)
-    {
-            var keyList = [];
-            if (typeof(target) == 'object')
-            {
-                    for (var key in target) {
-                            keyList.push(key + '');
-                            var objc = target[key];
-                            if (typeof(objc) == 'object') {
-                                    var keyListTemp = this.getKeyIndexArray(objc);
-                                    for (var j in keyListTemp)
-                                    {
-                                        keyList.push(key + ">" + keyListTemp[j]);
-                                    }
-                            }
-                    }
-            }
-            return keyList;
-    }
-
-
-    /**
-     * 根据path取值，如果不是数组，就转成数组
-     * @param  string $path
-     * @return array
-     */
-    HaoResult.prototype.findAsList = function(path)
-    {
-        var value = this.find(path);
-
-        if ( typeof(value)!=='object' || value instanceof HaoResult)
-        {
-                value = [value];
-        }
-
-        return value;
-    }
-
-    /**
-     * 根据path取值，如果不是字符串，就转成字符串
-     * @param  string path
-     * @return string
-     */
-    HaoResult.prototype.findAsString = function(path)
-    {
-        var    value = this.find(path);
-
-        if (typeof(value) != 'string')
-        {
-                value = value+"";
-        }
-
-        return value;
-    }
-
-
-    /**
-     * 根据path取值，如果不是数字，就转成数字
-     * @param  string path
-     * @return int
-     */
-    HaoResult.prototype.findAsInt = function(path)
-    {
-        var    value = this.find(path);
-
-        if (typeof(value)!='number')
-        {
-                value = parseInt(value);
-        }
-
-        return value;
-    }
-
-    /**
-     * 根据path取值，如果不是HaoResult类型，就转成HaoResult类型
-     * @param  string path
-     * @return HaoResult
-     */
-    HaoResult.prototype.findAsResult = function(path)
-    {
-        var    value = this.find(path);
-
-        if (!(value instanceof HaoResult))
-        {
-                value = new HaoResult(value, this.errorCode, this.errorStr, this.extraInfo);
-        }
-
-        return value;
-    }
-
-
-    /** 在结果中进行搜索，返回结果是数组（至少也是空数组） */
-    HaoResult.prototype.search = function(path)
-    {
-        if (this.searchIndexString == null)
-        {
-            var resultObjc = {};
-            resultObjc['results']       = this.results;
-            resultObjc['extraInfo']     = this.extraInfo;
-                var searchIndex             = this.getKeyIndexArray( resultObjc );
-                this.searchIndexString      = searchIndex.join("\n");
-        }
-
-        path = path.trim();
-
-        if ( path.indexOf('results>') !== 0 && path.indexOf('extraInfo>') !== 0 )
-        {
-                path = 'results>' + path;
-        }
-
-        var result = [];
-        var reg = new RegExp('(^|\\s)(' + path + ')(|\\s+)','g');
-        var _this = this;
-        this.searchIndexString.replace(reg,function($0,$1,$2,$3){
-            result.push(_this.find($2));
-        });
-        return result;
-    }
-
-    /**  将属性results进行转化后输出。 通常用于列表页结果，可以用该方法一次性获得N个HaoResult组成的数组。 */
-    HaoResult.prototype.results = function()
-    {
-            return this.find('results>');
-    }
-
-    /** 判断当前实例是否目标model */
-    HaoResult.prototype.isModelType = function(modelType)
-    {
-            return modelType.toLowerCase() == this.modelType.toLowerCase();
-    }
-
-    /**
-     * 判断是否等于目标ErroCode
-     * @param  array  errorCode  目标errorCode
-     * @return boolean            是否一致
-     */
-    HaoResult.prototype.isErrorCode = function(errorCode)
-    {
-            return this.errorCode === errorCode;
-    }
-
-    /**
-     * 判断是否正确获得结果
-     * @return boolean            是否正确获得
-     */
-    HaoResult.prototype.isResultsOK = function()
-    {
-            return this.isErrorCode(0) ;
-    }
-
-    /** 返回字典类型数据（重新包装成字典） */
-    HaoResult.prototype.properties = function()
-    {
-            return {
-                                    'errorCode'  : this.errorCode,
-                                    'errorStr'   : this.errorStr,
-                                    'extraInfo'  : this.extraInfo,
-                                    'results'    : this.results
-                    };
-    }
-
-    return HaoResult;
-})();
-
-// window.addEventListener('unhandledrejection', event =>
-// {
-//     console.log('unhandledrejection',event); // 打印"Hello, Fundebug!"
-// });
+import HaoObject from './HaoObject.js'
+import HaoResult from './HaoResult.js'
 
 const HaoConnect = {
+    cache:{},
+    pendingChange(step=1){
+        if (!this._pendingChange)
+        {
+            this._pendingChange = 0;
+        }
+        this._pendingChange += step;
+        if (this._pendingChange==1){
+            NProgress.start();
+        }
+        else if (this._pendingChange==0){
+            NProgress.done();
+        }
+    },
     getCookie:function(name) {
         var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
         if (arr = document.cookie.match(reg))
@@ -306,13 +30,30 @@ const HaoConnect = {
         else
             return null;
     },
+    dropCaches:function(){
+        //尝试清除无用的缓存引用。
+        HaoObject.dropCaches();
+    },
     request:function(urlParam,  content={}, method='get'){
-        let params = {
+        var _this = this;
+
+        var cache = [];
+        var params = {
                         'url_param':urlParam,
-                        'content':JSON.stringify(content),
+                        'content':JSON.stringify(content, function(key, value) {
+                                        if (typeof value === 'object' && value !== null) {
+                                            if (cache.indexOf(value) !== -1) {
+                                                // Circular reference found, discard key
+                                                return;
+                                            }
+                                            // Store value in our collection
+                                            cache.push(value);
+                                        }
+                                        return value;
+                                    }),
                         };
-        // return  axios.post('http://mobile4-jiyingshou.haoxitech.com/static/js/ajax_haoconnect.php',params);
-        let crsftoken = '';
+        // return  axios.post('http://mobile4-jiyingshou.haoxitech.com/js/ajax_haoconnect.php',params);
+        var crsftoken = '';
         var tmpArr = [];
         for (var i in params)
         {
@@ -321,9 +62,20 @@ const HaoConnect = {
                 tmpArr.push(i+'='+params[i]);
             }
         }
-        if (this.getCookie('Userid')>0)
+        var requestMD5;
+        // 只有pending中的promise可以共用。
+        if (method == 'get')
         {
-            tmpArr.push('Userid'+'='+this.getCookie('Userid'));
+            requestMD5 = SparkMD5.hash( tmpArr.join('') );
+            if (_this.cache[requestMD5])
+            {
+                return _this.cache[requestMD5];
+            }
+        }
+
+        if (_this.getCookie('Userid')>0)
+        {
+            tmpArr.push('Userid'+'='+_this.getCookie('Userid'));
         }
         var Haotime = parseInt(new Date().getTime() /1000);
         tmpArr.push('Haotime'+'='+Haotime);
@@ -331,18 +83,32 @@ const HaoConnect = {
         tmpArr = tmpArr.sort();
         var tmpArrString = tmpArr.join('');
         var tmpArrMd5 = SparkMD5.hash( tmpArrString );
-        console.log(tmpArrString,tmpArrMd5);
+        // console.log(tmpArrString,tmpArrMd5);
         let headers = {'X-Requested-With':'XMLHttpRequest','Haotime':Haotime,'Haosign':tmpArrMd5};
-        NProgress.start();
-        return  axios.request({
+        HaoConnect.pendingChange(1);
+
+        var CancelToken = axios.CancelToken;
+        var source = CancelToken.source();
+
+
+        var ret =  axios.request({
             method:method,
             url:'/ajax/ajax_haoconnect.php',
+            // url:'http://mobile4-jiyingshou.haoxitech.com/js/ajax_haoconnect.php',
             params:method=='get'?params:null,
             data:method=='post'?qs.stringify(params):null,
             headers:headers,
+            cancelToken: source.token,
+            timeout: 300000,
         }).then(function(response){
-            NProgress.done();
-            let hResult =  new HaoResult(response.data);
+            // 如果请求成功，则移除请求缓存，不再共用。
+            // 也就是说只有请求中的缓存才能共用。
+            if (requestMD5 && _this.cache[requestMD5])
+            {
+                delete _this.cache[requestMD5];
+            }
+            HaoConnect.pendingChange(-1);
+            let hResult =  HaoResult.instance(response.data);
             if (hResult.isResultsOK())
             {
                 return hResult;
@@ -350,17 +116,26 @@ const HaoConnect = {
             else
             {
                 return Promise.reject(hResult) ;
-                // let pReject = Promise.reject(hResult) ;
-                // console.log('pReject',pReject);
-                // setTimeout(function(){
-                //   pReject.then(function(){
-                //     console.log('then',pReject);
-                //   });
-                //   console.log('pReject',pReject);
-                // },1);
-                // return pReject;
             }
-        },()=>{NProgress.done();});
+        });
+
+        ret.cancel = function(reson){
+            source.cancel('Operation canceled by the user.');
+            console.warn('HaoConnect.request canceled');
+        }
+
+        // 同一请求最多保留30秒，通常用于并发请求的共用。
+        if (method == 'get' && requestMD5)
+        {
+            _this.cache[requestMD5] = ret;
+            setTimeout(function(){
+                if (requestMD5 && _this.cache[requestMD5])
+                {
+                    delete _this.cache[requestMD5];
+                }
+            },30000);
+        }
+        return ret;
     },
     get:function(urlParam,  params={})
     {
@@ -386,8 +161,8 @@ const HaoConnect = {
     {
         return this.request(urlParam,  params, 'post');
     },
-    uploadFileToQiniu:function(file,onPercent=null){
-        NProgress.start();
+    uploadFileToQiniu:function(file,onProgress=null){
+        HaoConnect.pendingChange(1);
         return new Promise( (resolve, reject)=>{
             browserMD5File(file,(err, md5)=>{
                 let hconnect = this.post('qiniu/getUploadTokenForQiniu',{
@@ -397,10 +172,11 @@ const HaoConnect = {
                 }).then(hResult=>{
                     if (hResult.find('isFileExistInQiniu') && hResult.find('urlPreview'))
                     {
-                        if (onPercent)
+                        if (onProgress)
                         {
-                            onPercent(100);
+                            onProgress({loaded:100,total:100,percent:100});
                         }
+                        HaoConnect.pendingChange(-1);
                         return hResult;
                     }
                     else
@@ -413,24 +189,25 @@ const HaoConnect = {
                         let config = {
                             headers:{'Content-Type':'multipart/form-data'},
                         };
-                        if (onPercent)
+                        if (onProgress)
                         {
-                            onPercent(1);
+                            onProgress({loaded:1,total:100,percent:1});
                             config.onUploadProgress = function( progressEvent ) {
-                                var percent = parseInt( Math.round( ( progressEvent.loaded * 100 ) / progressEvent.total ) );
-                                if (percent<1)
+                                progressEvent.percent = parseInt( Math.round( ( progressEvent.loaded * 100 ) / progressEvent.total ) );
+                                if (progressEvent.percent<1)
                                 {
-                                    percent = 1;
+                                    progressEvent.percent = 1;
                                 }
-                                onPercent(percent) ;
+                                onProgress(progressEvent) ;
                             }
                         }
                         return  axios.post('http://upload.qiniu.com/',param,config)
                                 .then(response=>{
-                                    return new HaoResult(response.data);
-                                },()=>{NProgress.done();});
+                                    HaoConnect.pendingChange(-1);
+                                    return HaoResult.instance(response.data);
+                                },function(){HaoConnect.pendingChange(-1);});
                     }
-                });
+                },function(){HaoConnect.pendingChange(-1);});
                 return resolve(hconnect);
             });
         });

@@ -1,6 +1,6 @@
 <?php
 /**
- * 供前端ajax进行请求，将相应表单转化调用对应的HaoConnect接口。
+ * 222供前端ajax进行请求，将相应表单转化调用对应的HaoConnect接口。
  */
 ini_set('display_errors',1);            //错误信息
 ini_set('display_startup_errors',1);    //启动错误信息
@@ -20,6 +20,9 @@ define("AX_TIMER_START", microtime (true));//记录请求开始时间
 
     //加载基础方法
     require_once(AXAPI_ROOT_PATH.'/components/Utility.php');
+
+//debug
+// if ($_REQUEST['url_param']=='/customer/detail'){sleep(1);}
 
 //接口安全校验
 // 转化header头里key值为字母大写其他字母小写的key值，
@@ -43,7 +46,7 @@ if (isset($headers['Haotime']))
 sort($tmpArr, SORT_STRING);//对数组进行自然排序
 $tmpArrString = implode( $tmpArr );//将排序后的数组组合成字符串
 $tmpArrMd5 = md5( $tmpArrString );//对这个字符串进行MD5加密，即可获得Signature
-if (!isset($_REQUEST['content']) || !isset($headers['Haosign']) || !isset($headers['Haotime']) || $headers['Haosign']!=$tmpArrMd5 || abs($headers['Haotime'] - time()) > 5*60 )
+if (!isset($_REQUEST['content']) || !isset($headers['Haosign']) || !isset($headers['Haotime']) || $headers['Haosign']!=$tmpArrMd5 )//|| abs($headers['Haotime'] - time()) > 5*60
 {
     echo json_encode(array(
                             'errorCode'  => -1,
@@ -101,13 +104,42 @@ if (AXAPI_DEPLOY_STATUS==2 && (Utility::getHeaderValue('Referer')==null || strpo
 //调用对应接口方法
 $content = '';
 $params = json_decode($_REQUEST['content'],true);
-try {
-    $method = new ReflectionMethod(HaoUtility::camelCase($apiController.'Connect'), HaoUtility::camelCase('request'.$apiAction));
-    $result = $method->invoke(null,$params);
-} catch (Exception $e) {
-    $method       = $_SERVER['REQUEST_METHOD'];
-    $result = HaoConnect::request($urlParam,$params,$method);
+if ($_SERVER['REQUEST_METHOD']=='GET')
+{
+    if (isset($_SERVER['HTTP_IF_NONE_MATCH']))
+    {
+        HaoConnect::$IF_NONE_MATCH = $_SERVER['HTTP_IF_NONE_MATCH'];
+    }
+    $ret = HaoConnect::loadContent($urlParam,$params,METHOD_GET,300,'all');
+    $headarr= explode("\r\n", $ret['header']);
+    foreach($headarr as $h){
+        if(strlen($h)>0){
+            if(strpos($h,'Content-Length')!==false) continue;
+            if(strpos($h,'Transfer-Encoding')!==false) continue;
+            if(strpos($h,'Connection')!==false) continue;
+            if(strpos($h,'HTTP/1.1 100 Continue')!==false) continue;
+            header($h);
+        }
+    }
+    echo $ret['body'];
+    exit;
 }
+else
+{
+    try {
+        $method = new ReflectionMethod(HaoUtility::camelCase($apiController.'Connect'), HaoUtility::camelCase('request'.$apiAction));
+        $result = $method->invoke(null,$params);
+    } catch (Exception $e) {
+        $method       = $_SERVER['REQUEST_METHOD'];
+        $result = HaoConnect::request($urlParam,$params,$method);
+    }
 
-header('content-type: application/json');
-echo json_encode($result->properties());
+    if ($result->responseText)
+    {
+        echo $result->responseText;
+    }
+    else
+    {
+        echo json_encode($result->properties());
+    }
+}

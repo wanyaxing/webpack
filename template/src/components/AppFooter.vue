@@ -94,12 +94,15 @@ export default {
     padding: 0;
     border-top: 1px solid #d0d0d0;
 }
+.app-footer .nav-ul{
+    text-align: center;
+}
 .app-footer .nav-li{
-    float: left;
     margin-top: 0;
     width: 25%;
     border-radius: 0;
     background-color: white;
+    display: inline-block;
 }
 .app-footer .nav-li .nav-heading{
     white-space: nowrap;

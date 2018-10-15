@@ -212,3 +212,12 @@
 .btn_disabled{
     pointer-events:none!important;
 }
+/*-------------------------*/
+.viewer-container .viewer-list{
+    height: 120px;
+}
+.viewer-container .viewer-list li{
+    height: 120px;
+    width: 120px;
+}
+/*--------------*/

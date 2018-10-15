@@ -40,7 +40,7 @@ export default {
         },
         accept:{
             type: String,
-            default: 'image/jpeg,image/gif,image/png'
+            default: 'image/*'
         },
     },
     data(){
@@ -74,9 +74,9 @@ export default {
                         });
                     });
                 }
-                sequence.finally(()=>{
+                sequence.then(()=>{
                     this.isUploading = false;
-                }).catch(hResult=>{console.error(hResult);alert(hResult && hResult.errorStr?hResult.errorStr:hResult)});
+                }).catch(hResult=>{this.isUploading = false;console.error(hResult);alert(hResult && hResult.errorStr?hResult.errorStr:hResult)});
             }
         },
         updateIfMultiple:function(){
